@@ -1,11 +1,21 @@
 // backend/middlewares/authMiddleware.js
+const jwt = require('jsonwebtoken');
 
-// Middleware de exemplo para verificação de token (a ser aprimorado)
 module.exports = (req, res, next) => {
-    // Exemplo: extrair token dos headers, verificar validade, etc.
-    console.log("Middleware de autenticação executado");
-    
-    // Se a autenticação for bem-sucedida, chama next()
+  const token = req.headers['authorization'];
+  if (!token) {
+    return res.status(401).json({ message: 'Token não fornecido.' });
+  }
+
+  // O token pode vir com o prefixo "Bearer ", então vamos removê-lo, se necessário
+  const tokenLimpo = token.startsWith('Bearer ') ? token.slice(7, token.length) : token;
+
+  jwt.verify(tokenLimpo, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).json({ message: 'Token inválido.' });
+    }
+    // Armazena os dados do token no objeto de requisição para uso posterior, se necessário
+    req.user = decoded;
     next();
-  };
-  
+  });
+};

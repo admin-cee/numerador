@@ -19,6 +19,11 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+// backend/server.js (adicionar abaixo das outras rotas)
+const documentRoutes = require('./routes/documentRoutes');
+app.use('/api/documents', documentRoutes);
+
+
 // Porta configurada no .env ou padrão 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
