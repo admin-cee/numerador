@@ -15,6 +15,10 @@ app.get('/', (req, res) => {
   res.send('Olá, CEE-Numerador! Backend funcionando.');
 });
 
+// Importando e usando as rotas de autenticação (exemplo)
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
 // Porta configurada no .env ou padrão 5000
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
