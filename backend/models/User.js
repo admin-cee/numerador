@@ -1,16 +1,24 @@
 // backend/models/User.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/database');
 
-// Exemplo: estrutura de um modelo de usuário (a ser adaptado conforme o banco de dados utilizado)
-class User {
-    constructor(id, nome, email, senha) {
-      this.id = id;
-      this.nome = nome;
-      this.email = email;
-      this.senha = senha;
-    }
-    
-    // Métodos para interagir com o banco de dados podem ser adicionados aqui
+const User = sequelize.define('User', {
+  nome: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  email: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    unique: true  // Garante que não existam dois usuários com o mesmo e-mail
+  },
+  senha: {
+    type: DataTypes.STRING,
+    allowNull: false
   }
-  
-  module.exports = User;
-  
+}, {
+  tableName: 'users',
+  timestamps: true  // Cria automaticamente os campos createdAt e updatedAt
+});
+
+module.exports = User;

@@ -3,6 +3,7 @@
 require("dotenv").config(); // Carrega variáveis do .env
 const express = require("express");
 const cors = require("cors");
+const sequelize = require('./config/database'); // Importa a conexão com o DB
 
 const app = express();
 
@@ -25,10 +26,20 @@ app.use("/api/documents", documentRoutes);
 const auditRoutes = require("./routes/auditRoutes");
 app.use("/api/audit", auditRoutes);
 
-// Porta configurada no .env ou padrão 5000
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
+
+// Se o módulo for executado diretamente, sincroniza os modelos e inicia o servidor
+if (require.main === module) {
+  sequelize.sync({ alter: true })
+    .then(() => {
+      console.log('Modelos sincronizados com sucesso.');
+      const PORT = process.env.PORT || 5001;
+      app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+      });
+    })
+    .catch((error) => {
+      console.error('Erro ao sincronizar modelos:', error);
+    });
+}
 
 module.exports = app;

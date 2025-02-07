@@ -1,9 +1,7 @@
 // backend/controllers/authController.js
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
-// Armazenamento em memória para os usuários (para demonstração)
-const users = [];
+const User = require('../models/User');
 
 // Função para registro de usuário
 exports.register = async (req, res) => {
@@ -13,27 +11,25 @@ exports.register = async (req, res) => {
     return res.status(400).json({ message: 'Nome, email e senha são obrigatórios.' });
   }
 
-  // Verifica se o usuário já existe
-  const existingUser = users.find(user => user.email === email);
-  if (existingUser) {
-    return res.status(400).json({ message: 'Usuário já existe.' });
-  }
-
   try {
+    // Verifica se o usuário já existe no banco de dados
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: 'Usuário já existe.' });
+    }
+
+    // Criptografa a senha
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(senha, saltRounds);
 
-    // Cria o usuário (atribui um id incremental simples)
-    const newUser = {
-      id: users.length + 1,
+    // Cria o usuário no banco de dados usando o modelo do Sequelize
+    const newUser = await User.create({
       nome,
       email,
       senha: hashedPassword
-    };
+    });
 
-    users.push(newUser);
-
-    return res.status(201).json({ message: 'Usuário registrado com sucesso.' });
+    return res.status(201).json({ message: 'Usuário registrado com sucesso.', user: newUser });
   } catch (error) {
     console.error('Erro no registro:', error);
     return res.status(500).json({ message: 'Erro ao registrar o usuário.' });
@@ -48,13 +44,13 @@ exports.login = async (req, res) => {
     return res.status(400).json({ message: 'Email e senha são obrigatórios.' });
   }
 
-  // Procura o usuário pelo email
-  const user = users.find(user => user.email === email);
-  if (!user) {
-    return res.status(401).json({ message: 'Credenciais inválidas.' });
-  }
-
   try {
+    // Procura o usuário no banco de dados
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciais inválidas.' });
+    }
+
     // Compara a senha informada com a armazenada (criptografada)
     const passwordMatch = await bcrypt.compare(senha, user.senha);
     if (!passwordMatch) {
