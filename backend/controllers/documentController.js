@@ -1,4 +1,5 @@
 // backend/controllers/documentController.js
+const auditController = require('./auditController');
 
 // Array em memória para armazenar documentos (apenas para demonstração)
 const documents = [];
@@ -35,6 +36,9 @@ exports.generateDocumentNumber = (req, res) => {
   // Opcional: use o logger para registrar essa ação
   // const logger = require('../utils/logger');
   // logger.log(`Documento gerado: ${numeroFormatado}`);
+
+  // Registra o evento de auditoria
+  auditController.logEvent(`Documento gerado: ${numeroFormatado}`);
 
   return res.status(201).json({ message: 'Documento gerado com sucesso.', documento: novoDocumento });
 };
