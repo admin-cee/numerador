@@ -1,14 +1,15 @@
 // frontend/src/pages/Dashboard.js
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Alert } from "@mui/material";
 import api from "../services/api";
 import GenerateDocumentForm from "../components/GenerateDocumentForm";
 import DocumentsTable from "../components/DocumentsTable";
 import { AuthContext } from "../context/AuthContext";
+import DashboardWelcome from "../components/DashboardWelcome";
 
 const Dashboard = () => {
-  const { user, logout } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const [documents, setDocuments] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -60,7 +61,16 @@ const Dashboard = () => {
       >
         Logout
       </Button>
-      <p>Bem-vindo, {user ? user.email : "Usuário"}!</p>
+
+      {/* Componente de boas-vindas que utiliza os dados do usuário */}
+      <DashboardWelcome />
+
+      {/* Exibe um alerta de erro, se houver */}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       {/* Componente para gerar um novo documento */}
       <GenerateDocumentForm onDocumentGenerated={handleDocumentGenerated} />

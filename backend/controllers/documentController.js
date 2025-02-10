@@ -37,7 +37,7 @@ exports.generateDocumentNumber = async (req, res) => {
     });
 
     // Registra o evento de auditoria
-    auditController.logEvent(`Documento gerado: ${numeroFormatado}`);
+    auditController.logEvent(`Documento gerado: ${numeroFormatado} pelo usuário ${req.user ? req.user.email : 'desconhecido'}`);
 
     return res.status(201).json({ message: 'Documento gerado com sucesso.', documento: novoDocumento });
   } catch (error) {
