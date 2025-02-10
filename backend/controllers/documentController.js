@@ -4,7 +4,7 @@ const auditController = require('./auditController');
 
 // Função para gerar um novo número de documento para uma combinação de comissão e tipo
 exports.generateDocumentNumber = async (req, res) => {
-  const { comissao, tipo } = req.body;
+  const { comissao, tipo, assunto } = req.body;
   
   if (!comissao || !tipo) {
     return res.status(400).json({ message: 'Comissão e tipo de documento são obrigatórios.' });
@@ -32,6 +32,7 @@ exports.generateDocumentNumber = async (req, res) => {
       numeroFormatado,
       comissao,
       tipo,
+      assunto, // Pode ser nulo se não for fornecido
       criadoEm: new Date()
     });
 

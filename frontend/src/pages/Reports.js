@@ -5,6 +5,7 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Button, Box, Alert } from "@mui/material";
 import { CSVLink } from "react-csv";
+import { useNavigate } from 'react-router-dom';
 import { jsPDF } from "jspdf";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -13,6 +14,7 @@ const Reports = () => {
   const [documentStats, setDocumentStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const fetchDocuments = async () => {
     try {
@@ -66,6 +68,29 @@ const Reports = () => {
     ],
   };
 
+  const options = {
+    responsive: true, // Garante que o gráfico seja responsivo
+    plugins: {
+      legend: {
+        position: "top", // Posição da legenda: 'top', 'bottom', 'left', 'right'
+        labels: {
+          font: {
+            size: 14, // Tamanho da fonte da legenda
+          },
+          color: "#333", // Cor dos rótulos da legenda
+        },
+      },
+      tooltip: {
+        enabled: true, // Habilita os tooltips
+        backgroundColor: "#fff", // Cor de fundo dos tooltips
+        titleColor: "#000", // Cor do título nos tooltips
+        bodyColor: "#000", // Cor do corpo dos tooltips
+        borderColor: "#ccc", // Cor da borda do tooltip
+        borderWidth: 1, // Largura da borda
+      },
+    },
+  };
+
   // Prepara os dados para CSV
   const csvData = Object.keys(documentStats).map((tipo) => ({
     Tipo: tipo,
@@ -94,7 +119,18 @@ const Reports = () => {
         <Alert severity="error">{error}</Alert>
       ) : (
         <>
-          <Pie data={chartData} />
+          {/* Contêiner com tamanho máximo definido para o gráfico */}
+          <Box
+            sx={{
+              maxWidth: 500, // Largura máxima de 500px
+              maxHeight: 400, // Altura máxima de 400px
+              width: "100%",
+              margin: "0 auto",
+              position: "relative",
+            }}
+          >
+            <Pie data={chartData} options={options} />
+          </Box>
           <Box sx={{ marginTop: 2 }}>
             <Button variant="contained" color="primary" sx={{ marginRight: 2 }}>
               <CSVLink
@@ -104,13 +140,19 @@ const Reports = () => {
               >
                 Exportar CSV
               </CSVLink>
-            </Button>    
+            </Button>
             <Button variant="contained" color="secondary" onClick={exportPDF}>
               Exportar PDF
             </Button>
           </Box>
         </>
       )}
+      {/* Botão para voltar à Dashboard */}
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Button variant="outlined" onClick={() => navigate('/dashboard')}>
+          Voltar para Dashboard
+        </Button>
+      </Box>
     </Box>
   );
 };

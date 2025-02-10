@@ -19,6 +19,10 @@ const Document = sequelize.define('Document', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  assunto: {  // Novo campo para a descrição breve do assunto
+    type: DataTypes.STRING,
+    allowNull: true, // opcional
+  },
   criadoEm: {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,

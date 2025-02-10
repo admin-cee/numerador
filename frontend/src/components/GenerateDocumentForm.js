@@ -15,6 +15,7 @@ import api from "../services/api";
 const GenerateDocumentForm = ({ onDocumentGenerated }) => {
   const [comissao, setComissao] = useState("");
   const [tipo, setTipo] = useState("");
+  const [assunto, setAssunto] = useState(''); // Novo estado para o assunto
   const [error, setError] = useState(null);
 
   const documentTypes = [
@@ -43,10 +44,12 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
       const response = await api.post("/api/documents/generate", {
         comissao,
         tipo,
+        assunto,
       });
       onDocumentGenerated(response.data.documento);
       setComissao("");
       setTipo("");
+      setAssunto('');
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Erro ao gerar documento.");
@@ -95,6 +98,14 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
             ))}
           </Select>
         </FormControl>
+        <TextField
+          label="Assunto (Opcional)"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          value={assunto}
+          onChange={(e) => setAssunto(e.target.value)}
+        />
         <Button variant="contained" type="submit" fullWidth>
           Gerar
         </Button>
