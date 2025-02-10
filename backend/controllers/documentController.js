@@ -6,9 +6,9 @@ const documents = [];
 
 // Função para gerar um novo número de documento para uma comissão específica
 exports.generateDocumentNumber = (req, res) => {
-  const { comissao } = req.body;
-  if (!comissao) {
-    return res.status(400).json({ message: 'A comissão é obrigatória.' });
+  const { comissao, tipo } = req.body;
+  if (!comissao || !tipo) {
+    return res.status(400).json({ message: 'Comissão e tipo de documento são obrigatórios.' });
   }
 
   // Filtra os documentos para a comissão informada e encontra o último número gerado
@@ -20,8 +20,9 @@ exports.generateDocumentNumber = (req, res) => {
   }
   const novoNumero = ultimoNumero + 1;
 
-  // Formata o número com zeros à esquerda e concatena com a sigla da comissão (ex.: 003CPL)
-  const numeroFormatado = novoNumero.toString().padStart(3, '0') + comissao;
+  // Formata o número com zeros à esquerda e concatena com a sigla da comissão e o tipo
+  // Exemplo de formato: 002CEED_PORTARIA
+  const numeroFormatado = novoNumero.toString().padStart(3, '0') + comissao + '_' + tipo.toUpperCase();
 
   // Cria o documento e salva no array
   const novoDocumento = {
@@ -29,6 +30,7 @@ exports.generateDocumentNumber = (req, res) => {
     numero: novoNumero,
     numeroFormatado,
     comissao,
+    tipo,
     criadoEm: new Date()
   };
   documents.push(novoDocumento);
