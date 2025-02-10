@@ -1,40 +1,55 @@
 // frontend/src/components/GenerateDocumentForm.js
-import React, { useState } from 'react';
-import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Box, Alert } from '@mui/material';
-import api from '../services/api';
+import React, { useState } from "react";
+import {
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+  Alert,
+} from "@mui/material";
+import api from "../services/api";
 
 const GenerateDocumentForm = ({ onDocumentGenerated }) => {
-  const [comissao, setComissao] = useState('');
-  const [tipo, setTipo] = useState('');
+  const [comissao, setComissao] = useState("");
+  const [tipo, setTipo] = useState("");
   const [error, setError] = useState(null);
 
   const documentTypes = [
-    'ANÁLISE',
-    'COMUNICAÇÃO INTERNA',
-    'DILIGÊNCIA',
-    'OFÍCIO',
-    'PORTARIA',
-    'INFORME',
-    'PAUTA',
-    'PARECER',
-    'NOTA TÉCNICA',
-    'RESOLUÇÃO'
+    "ANÁLISE",
+    "COMUNICAÇÃO INTERNA",
+    "DILIGÊNCIA",
+    "OFÍCIO",
+    "PORTARIA",
+    "INFORME",
+    "PAUTA",
+    "PARECER",
+    "NOTA TÉCNICA",
+    "RESOLUÇÃO",
   ];
+
+  // Lista das siglas das comissões disponíveis
+  const comissoes = ["CLN", "CEDP", "CEDB", "CEDS", "CEASPE", "CEED"];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!comissao || !tipo) {
-      setError('Por favor, preencha todos os campos.');
+      setError("Por favor, preencha todos os campos.");
       return;
     }
     try {
-      const response = await api.post('/api/documents/generate', { comissao, tipo });
+      const response = await api.post("/api/documents/generate", {
+        comissao,
+        tipo,
+      });
       onDocumentGenerated(response.data.documento);
-      setComissao('');
-      setTipo('');
+      setComissao("");
+      setTipo("");
       setError(null);
     } catch (err) {
-      setError(err.response?.data?.message || 'Erro ao gerar documento.');
+      setError(err.response?.data?.message || "Erro ao gerar documento.");
     }
   };
 
@@ -43,15 +58,25 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
       <h3>Gerar Novo Documento</h3>
       {error && <Alert severity="error">{error}</Alert>}
       <form onSubmit={handleSubmit}>
-        <TextField
-          label="Comissão"
-          variant="outlined"
-          fullWidth
-          margin="normal"
-          value={comissao}
-          onChange={(e) => setComissao(e.target.value)}
-          required
-        />
+        <FormControl fullWidth margin="normal" required>
+          <InputLabel id="comissao-label">Comissão</InputLabel>
+          <Select
+            labelId="comissao-label"
+            label="Comissão"
+            value={comissao}
+            onChange={(e) => setComissao(e.target.value)}
+          >
+            <MenuItem value="">
+              <em>Selecione a comissão</em>
+            </MenuItem>
+            {comissoes.map((sigla, index) => (
+              <MenuItem key={index} value={sigla}>
+                {sigla}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
         <FormControl variant="outlined" fullWidth margin="normal" required>
           <InputLabel id="tipo-label">Tipo de Documento</InputLabel>
           <Select

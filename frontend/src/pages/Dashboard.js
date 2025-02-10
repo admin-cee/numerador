@@ -1,19 +1,11 @@
 // frontend/src/pages/Dashboard.js
 import React, { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
 import api from "../services/api";
 import GenerateDocumentForm from "../components/GenerateDocumentForm";
-import {
-  Button,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Box,
-  Alert,
-} from "@mui/material";
+import DocumentsTable from "../components/DocumentsTable";
 import { AuthContext } from "../context/AuthContext";
-import { Link, useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user, logout } = useContext(AuthContext);
@@ -53,67 +45,68 @@ const Dashboard = () => {
 
   // Filtra os documentos com base no texto digitado no filtro
   const filteredDocuments = documents.filter((doc) => {
-    // Se não houver filtro, retorna todos os documentos.
     if (!filter) return true;
-    // Verifica se o identificador do documento (numeroFormatado) contém o texto do filtro (ignora maiúsculas/minúsculas)
     return doc.numeroFormatado.toLowerCase().includes(filter.toLowerCase());
   });
 
   return (
     <div style={{ padding: "1rem" }}>
       <h2>Dashboard</h2>
-      <button
+      <Button
         onClick={handleLogout}
-        style={{ float: "right", padding: "0.5rem 1rem", marginBottom: "1rem" }}
+        variant="contained"
+        color="error"
+        sx={{ float: "right", mb: 2 }}
       >
         Logout
-      </button>
+      </Button>
       <p>Bem-vindo, {user ? user.email : "Usuário"}!</p>
+
       {/* Componente para gerar um novo documento */}
       <GenerateDocumentForm onDocumentGenerated={handleDocumentGenerated} />
+
       <div style={{ marginTop: "1rem" }}>
         <h3>Documentos Gerados</h3>
-        {/* Campo para filtrar a lista de documentos */}
-        <input
-          type="text"
-          placeholder="Filtrar documentos..."
+        <TextField
+          label="Filtrar documentos..."
+          variant="outlined"
+          fullWidth
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
+          sx={{ mb: 2 }}
         />
-        {/* Botão para atualizar manualmente a lista */}
-        <Button variant="contained" type="submit" fullWidth>
+        {/* Links para acessar as páginas de auditoria e relatórios */}
+        <div style={{ marginTop: "2rem" }}>
+          <p>
+            <Link to="/audit" style={{ textDecoration: "none", color: "blue" }}>
+              Ver Logs de Auditoria
+            </Link>
+          </p>
+          <p>
+            <Link
+              to="/reports"
+              style={{ textDecoration: "none", color: "blue" }}
+            >
+              Ver Relatórios Estatísticos
+            </Link>
+          </p>
+        </div>
+
+        <Button
+          variant="contained"
+          onClick={fetchDocuments}
+          fullWidth
+          sx={{ mb: 2 }}
+        >
           Atualizar Lista
         </Button>
-        {/* Indicador de carregamento ou lista de documentos */}
         {loading ? (
           <p>Carregando documentos...</p>
         ) : filteredDocuments.length === 0 ? (
           <p>Nenhum documento encontrado.</p>
         ) : (
-          <ul>
-            {filteredDocuments.map((doc) => (
-              <li key={doc.id}>
-                {doc.numeroFormatado} – Criado em:{" "}
-                {new Date(doc.criadoEm).toLocaleString()}
-              </li>
-            ))}
-          </ul>
+          <DocumentsTable documents={filteredDocuments} />
         )}
-      </div>
-      {/* ... no JSX do Dashboard:*/}
-      <div style={{ marginTop: "2rem" }}>
-        <p>
-          <Link to="/reports" style={{ textDecoration: "none", color: "blue" }}>
-            Ver Relatórios Estatísticos
-          </Link>
-        </p>
-      </div>
-      {/* Link para acessar os logs de auditoria */}
-      <div style={{ marginTop: "2rem" }}>
-        <Link to="/audit" style={{ textDecoration: "none", color: "blue" }}>
-          Ver Logs de Auditoria
-        </Link>
       </div>
     </div>
   );
