@@ -2,6 +2,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import api from "../services/api";
 import GenerateDocumentForm from "../components/GenerateDocumentForm";
+import {
+  Button,
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+  Alert,
+} from "@mui/material";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -72,12 +82,9 @@ const Dashboard = () => {
           style={{ marginBottom: "1rem", padding: "0.5rem", width: "100%" }}
         />
         {/* Botão para atualizar manualmente a lista */}
-        <button
-          onClick={fetchDocuments}
-          style={{ marginBottom: "1rem", padding: "0.5rem 1rem" }}
-        >
+        <Button variant="contained" type="submit" fullWidth>
           Atualizar Lista
-        </button>
+        </Button>
         {/* Indicador de carregamento ou lista de documentos */}
         {loading ? (
           <p>Carregando documentos...</p>
