@@ -9,7 +9,6 @@ import {
   TableRow,
   Paper,
   TablePagination,
-  IconButton,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -17,11 +16,13 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import api from "../services/api";
 
-const DocumentsTable = ({ documents, onDocumentUpdated, onDocumentDeleted }) => {
+const DocumentsTable = ({
+  documents,
+  onDocumentUpdated,
+  onDocumentDeleted,
+}) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -118,12 +119,22 @@ const DocumentsTable = ({ documents, onDocumentUpdated, onDocumentDeleted }) => 
                 <TableCell>{doc.status}</TableCell>
                 <TableCell>{new Date(doc.criadoEm).toLocaleString()}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => openEditDialog(doc)}>
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton onClick={() => handleDelete(doc.id)}>
-                    <DeleteIcon color="error" />
-                  </IconButton>
+                  <Button
+                    onClick={() => openEditDialog(doc)}
+                    variant="outlined"
+                    size="small"
+                  >
+                    Editar
+                  </Button>
+                  <Button
+                    onClick={() => handleDelete(doc.id)}
+                    variant="outlined"
+                    size="small"
+                    color="error"
+                    sx={{ marginLeft: 1 }}
+                  >
+                    Excluir
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
