@@ -17,7 +17,7 @@ const Home = () => {
       }}
     >
       <Typography variant="h2" component="h1" gutterBottom align="center">
-        Dashboard CEE-Numerador
+        Numerador-CEE
       </Typography>
       <Typography variant="h6" component="p" gutterBottom align="center">
         Bem-vindo ao sistema de numeração de documentos do CEE-SC.
