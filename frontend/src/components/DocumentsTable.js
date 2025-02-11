@@ -102,6 +102,7 @@ const DocumentsTable = ({
               <TableCell>
                 <strong>Assunto</strong>
               </TableCell>
+              <TableCell>Status</TableCell>
               <TableCell>
                 <strong>Criado em</strong>
               </TableCell>
@@ -119,6 +120,8 @@ const DocumentsTable = ({
                 <TableCell>{doc.numero.toString().padStart(3, "0")}</TableCell>
                 <TableCell>{doc.numeroFormatado}</TableCell>
                 <TableCell>{doc.assunto}</TableCell>
+                <TableCell>{doc.status}</TableCell>
+
                 <TableCell>{new Date(doc.criadoEm).toLocaleString()}</TableCell>
                 <TableCell>
                   <Button
