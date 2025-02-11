@@ -56,3 +56,47 @@ exports.getDocuments = async (req, res) => {
     return res.status(500).json({ message: 'Erro ao buscar documentos.' });
   }
 };
+
+// Atualizar documento (edição)
+exports.updateDocument = async (req, res) => {
+  const { id } = req.params;
+  const { assunto, status } = req.body; // Supondo que esses campos sejam editáveis
+  try {
+    const document = await Document.findByPk(id);
+    if (!document) {
+      return res.status(404).json({ message: 'Documento não encontrado.' });
+    }
+    // Atualize os campos desejados
+    document.assunto = assunto || document.assunto;
+    document.status = status || document.status;
+    await document.save();
+
+    // Registre no log de auditoria
+    auditController.logEvent(`Documento ${document.numeroFormatado} atualizado. Novo assunto: ${document.assunto}, novo status: ${document.status}`);
+
+    return res.status(200).json({ message: 'Documento atualizado com sucesso.', document });
+  } catch (error) {
+    console.error('Erro ao atualizar documento:', error);
+    return res.status(500).json({ message: 'Erro ao atualizar documento.' });
+  }
+};
+
+// Excluir documento
+exports.deleteDocument = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const document = await Document.findByPk(id);
+    if (!document) {
+      return res.status(404).json({ message: 'Documento não encontrado.' });
+    }
+    await document.destroy();
+
+    // Registre o evento de auditoria
+    auditController.logEvent(`Documento ${document.numeroFormatado} excluído pelo usuário ${req.user ? req.user.email : 'desconhecido'}`);
+
+    return res.status(200).json({ message: 'Documento excluído com sucesso.' });
+  } catch (error) {
+    console.error('Erro ao excluir documento:', error);
+    return res.status(500).json({ message: 'Erro ao excluir documento.' });
+  }
+};
