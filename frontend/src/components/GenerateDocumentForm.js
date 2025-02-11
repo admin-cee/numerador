@@ -9,6 +9,7 @@ import {
   InputLabel,
   Box,
   Alert,
+  Typography,
 } from "@mui/material";
 import api from "../services/api";
 
@@ -24,15 +25,17 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
     "DILIGÊNCIA",
     "OFÍCIO",
     "PORTARIA",
-    "INFORME",
+    "INFORMAÇÃO",
     "PAUTA",
     "PARECER",
     "NOTA TÉCNICA",
     "RESOLUÇÃO",
+    "TERMO DE SANEAMENTO",
+    "RELATÓRIO DE VISITAS",
   ];
 
   // Lista das siglas das comissões disponíveis
-  const comissoes = ["CLN", "CEDP", "CEDB", "CEDS", "CEASPE", "CEED"];
+  const comissoes = ["CLN", "CEDP", "CEDB", "CEDS", "CEASPE", "CEED","PRES", "SEREV", "COADM" ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,11 +68,12 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
         p: 2,
       }}
     >
-      <h3>Gerar Novo Documento</h3>
-      {error && <Alert severity="error">{error}</Alert>}
+<Typography variant="h5" component="h3" gutterBottom>
+        Gerar novo número de documento
+      </Typography>      {error && <Alert severity="error">{error}</Alert>}
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth margin="normal" required>
-          <InputLabel id="comissao-label">Comissão</InputLabel>
+          <InputLabel id="comissao-label">Solicitante</InputLabel>
           <Select
             labelId="comissao-label"
             label="Comissão"

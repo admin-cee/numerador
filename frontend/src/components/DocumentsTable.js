@@ -37,7 +37,7 @@ const DocumentsTable = ({ documents }) => {
             <TableRow>
               <TableCell><strong>ID</strong></TableCell>
               <TableCell><strong>Tipo</strong></TableCell>
-              <TableCell><strong>Comissão</strong></TableCell>
+              <TableCell><strong>Solicitante</strong></TableCell>
               <TableCell><strong>Número</strong></TableCell>
               <TableCell><strong>Identificador</strong></TableCell>
               <TableCell><strong>Criado em</strong></TableCell>

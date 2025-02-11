@@ -16,6 +16,13 @@ const Home = () => {
         backgroundColor: 'background.default',
       }}
     >
+      {/* Exibe a logo do CEE */}
+      <Box component="img"
+           src="/CEE_LOGO.jpg"
+           alt="CEE Logo"
+           sx={{ maxWidth: { xs: '150px', sm: '200px' }, mb: 2 }}
+      />
+
       <Typography variant="h2" component="h1" gutterBottom align="center">
         Numerador-CEE
       </Typography>
