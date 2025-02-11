@@ -121,17 +121,27 @@ const DocumentsTable = ({
                 <TableCell>
                   <Button
                     onClick={() => openEditDialog(doc)}
-                    variant="outlined"
+                    variant="text" // Usando "text" deixa o botão mais discreto que "outlined" ou "contained"
                     size="small"
+                    sx={{
+                      minWidth: 0, // Remove o mínimo de largura
+                      padding: "4px 6px", // Diminui o padding interno
+                      fontSize: "0.75rem", // Diminui o tamanho da fonte
+                    }}
                   >
-                    Editar XX
+                    Editar
                   </Button>
                   <Button
                     onClick={() => handleDelete(doc.id)}
-                    variant="outlined"
+                    variant="text"
                     size="small"
                     color="error"
-                    sx={{ marginLeft: 1 }}
+                    sx={{
+                      minWidth: 0,
+                      padding: "4px 6px",
+                      fontSize: "0.75rem",
+                      ml: 1, // Margin left para separar um botão do outro
+                    }}
                   >
                     Excluir
                   </Button>
