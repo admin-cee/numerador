@@ -1,13 +1,7 @@
 // frontend/src/pages/Dashboard.js
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Button,
-  TextField,
-  Alert,
-  Box,
-  Typography,
-} from "@mui/material";
+import { Button, TextField, Alert, Box, Typography } from "@mui/material";
 import api from "../services/api";
 import GenerateDocumentForm from "../components/GenerateDocumentForm";
 import DocumentsTable from "../components/DocumentsTable";
@@ -42,6 +36,16 @@ const Dashboard = () => {
   // Função chamada quando um novo documento é gerado
   const handleDocumentGenerated = (newDocument) => {
     setDocuments((prevDocs) => [...prevDocs, newDocument]);
+  };
+
+  const handleDocumentUpdated = (updatedDoc) => {
+    setDocuments((prevDocs) =>
+      prevDocs.map((doc) => (doc.id === updatedDoc.id ? updatedDoc : doc))
+    );
+  };
+
+  const handleDocumentDeleted = (deletedId) => {
+    setDocuments((prevDocs) => prevDocs.filter((doc) => doc.id !== deletedId));
   };
 
   // Função de logout: remove o token e redireciona para o login
@@ -115,7 +119,11 @@ const Dashboard = () => {
         ) : filteredDocuments.length === 0 ? (
           <Typography>Nenhum documento encontrado.</Typography>
         ) : (
-          <DocumentsTable documents={filteredDocuments} />
+          <DocumentsTable
+            documents={filteredDocuments}
+            onDocumentUpdated={handleDocumentUpdated}
+            onDocumentDeleted={handleDocumentDeleted}
+          />
         )}
       </Box>
 
