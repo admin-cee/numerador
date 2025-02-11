@@ -124,7 +124,7 @@ const DocumentsTable = ({
                     variant="outlined"
                     size="small"
                   >
-                    Editar
+                    Editar XX
                   </Button>
                   <Button
                     onClick={() => handleDelete(doc.id)}
