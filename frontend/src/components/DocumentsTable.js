@@ -100,6 +100,9 @@ const DocumentsTable = ({
                 <strong>Identificador</strong>
               </TableCell>
               <TableCell>
+                <strong>Assunto</strong>
+              </TableCell>
+              <TableCell>
                 <strong>Criado em</strong>
               </TableCell>
               <TableCell>
