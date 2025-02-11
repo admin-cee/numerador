@@ -43,7 +43,7 @@ function Login() {
       }}
     >
       <Typography variant="h4" align="center" gutterBottom>
-        Login
+        Faça o Login
       </Typography>
       {error && (
         <Alert severity="error" sx={{ mb: 2 }}>
