@@ -1,7 +1,13 @@
 // frontend/src/pages/Dashboard.js
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Button, TextField, Alert } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Alert,
+  Box,
+  Typography,
+} from "@mui/material";
 import api from "../services/api";
 import GenerateDocumentForm from "../components/GenerateDocumentForm";
 import DocumentsTable from "../components/DocumentsTable";
@@ -51,32 +57,43 @@ const Dashboard = () => {
   });
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2>Dashboard</h2>
-      <Button
-        onClick={handleLogout}
-        variant="contained"
-        color="error"
-        sx={{ float: "right", mb: 2 }}
+    <Box sx={{ p: 2 }}>
+      {/* Cabeçalho com título e botão de logout */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", sm: "row" },
+          justifyContent: "space-between",
+          alignItems: "center",
+          mb: 2,
+        }}
       >
-        Logout
-      </Button>
+        <Typography variant="h4" sx={{ mb: { xs: 2, sm: 0 } }}>
+          Dashboard
+        </Typography>
+        <Button variant="contained" color="error" onClick={handleLogout}>
+          Logout
+        </Button>
+      </Box>
 
-      {/* Componente de boas-vindas que utiliza os dados do usuário */}
+      {/* Componente de boas-vindas */}
       <DashboardWelcome />
 
-      {/* Exibe um alerta de erro, se houver */}
+      {/* Exibe alerta de erro, se houver */}
       {error && (
-        <Alert severity="error" sx={{ mb: 2 }}>
+        <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
           {error}
         </Alert>
       )}
 
-      {/* Componente para gerar um novo documento */}
+      {/* Formulário para geração de documento */}
       <GenerateDocumentForm onDocumentGenerated={handleDocumentGenerated} />
 
-      <div style={{ marginTop: "1rem" }}>
-        <h3>Documentos Gerados</h3>
+      {/* Seção de documentos */}
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h5" gutterBottom>
+          Documentos Gerados
+        </Typography>
         <TextField
           label="Filtrar documentos..."
           variant="outlined"
@@ -85,23 +102,6 @@ const Dashboard = () => {
           onChange={(e) => setFilter(e.target.value)}
           sx={{ mb: 2 }}
         />
-        {/* Links para acessar as páginas de auditoria e relatórios */}
-        <div style={{ marginTop: "2rem" }}>
-          <p>
-            <Link to="/audit" style={{ textDecoration: "none", color: "blue" }}>
-              Ver Logs de Auditoria
-            </Link>
-          </p>
-          <p>
-            <Link
-              to="/reports"
-              style={{ textDecoration: "none", color: "blue" }}
-            >
-              Ver Relatórios Estatísticos
-            </Link>
-          </p>
-        </div>
-
         <Button
           variant="contained"
           onClick={fetchDocuments}
@@ -111,14 +111,28 @@ const Dashboard = () => {
           Atualizar Lista
         </Button>
         {loading ? (
-          <p>Carregando documentos...</p>
+          <Typography>Carregando documentos...</Typography>
         ) : filteredDocuments.length === 0 ? (
-          <p>Nenhum documento encontrado.</p>
+          <Typography>Nenhum documento encontrado.</Typography>
         ) : (
           <DocumentsTable documents={filteredDocuments} />
         )}
-      </div>
-    </div>
+      </Box>
+
+      {/* Links para auditoria e relatórios */}
+      <Box sx={{ mt: 4, textAlign: "center" }}>
+        <Typography>
+          <Link to="/audit" style={{ textDecoration: "none", color: "blue" }}>
+            Ver Logs de Auditoria
+          </Link>
+        </Typography>
+        <Typography>
+          <Link to="/reports" style={{ textDecoration: "none", color: "blue" }}>
+            Ver Relatórios Estatísticos
+          </Link>
+        </Typography>
+      </Box>
+    </Box>
   );
 };
 

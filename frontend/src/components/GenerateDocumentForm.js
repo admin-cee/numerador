@@ -15,7 +15,7 @@ import api from "../services/api";
 const GenerateDocumentForm = ({ onDocumentGenerated }) => {
   const [comissao, setComissao] = useState("");
   const [tipo, setTipo] = useState("");
-  const [assunto, setAssunto] = useState(''); // Novo estado para o assunto
+  const [assunto, setAssunto] = useState(""); // Novo estado para o assunto
   const [error, setError] = useState(null);
 
   const documentTypes = [
@@ -49,7 +49,7 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
       onDocumentGenerated(response.data.documento);
       setComissao("");
       setTipo("");
-      setAssunto('');
+      setAssunto("");
       setError(null);
     } catch (err) {
       setError(err.response?.data?.message || "Erro ao gerar documento.");
@@ -57,7 +57,14 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, marginBottom: 2 }}>
+    <Box
+      sx={{
+        maxWidth: { xs: "100%", sm: 400 },
+        mx: "auto",
+        mb: 2,
+        p: 2,
+      }}
+    >
       <h3>Gerar Novo Documento</h3>
       {error && <Alert severity="error">{error}</Alert>}
       <form onSubmit={handleSubmit}>
@@ -80,7 +87,7 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
           </Select>
         </FormControl>
 
-        <FormControl variant="outlined" fullWidth margin="normal" required>
+        <FormControl fullWidth margin="normal" required>
           <InputLabel id="tipo-label">Tipo de Documento</InputLabel>
           <Select
             labelId="tipo-label"

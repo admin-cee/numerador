@@ -1,6 +1,6 @@
 // frontend/src/pages/Login.js
-
 import React, { useState } from 'react';
+import { Box, Button, TextField, Typography, Alert } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,12 +15,12 @@ function Login() {
     setError(null);
     try {
       // Realiza a requisição de login utilizando a URL definida nas variáveis de ambiente
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
-        email,
-        senha,
-      });
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/auth/login`,
+        { email, senha }
+      );
 
-      // Armazena o token recebido (p.ex., no localStorage)
+      // Armazena o token recebido (por exemplo, no localStorage)
       localStorage.setItem('token', response.data.token);
 
       // Redireciona para a dashboard ou outra página protegida
@@ -32,40 +32,51 @@ function Login() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '0 auto', padding: '1rem' }}>
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
-        <div style={{ marginBottom: '1rem' }}>
-          <label htmlFor="senha">Senha:</label>
-          <input
-            id="senha"
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-            style={{ width: '100%', padding: '0.5rem' }}
-          />
-        </div>
-        <button type="submit" style={{ padding: '0.5rem 1rem' }}>
+    <Box
+      sx={{
+        maxWidth: { xs: '90%', sm: 400 },
+        mx: 'auto',
+        p: 2,
+        mt: 4,
+        boxShadow: 3,
+        borderRadius: 2,
+      }}
+    >
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
+      </Typography>
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+      <Box component="form" onSubmit={handleSubmit}>
+        <TextField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <TextField
+          label="Senha"
+          type="password"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+          required
+          fullWidth
+          sx={{ mb: 2 }}
+        />
+        <Button variant="contained" type="submit" fullWidth>
           Entrar
-        </button>
-      </form>
-      <p style={{ marginTop: '1rem' }}>
+        </Button>
+      </Box>
+      <Typography variant="body2" align="center" sx={{ mt: 2 }}>
         Não tem conta? <a href="/register">Registre-se</a>
-      </p>
-    </div>
+      </Typography>
+    </Box>
   );
 }
 
