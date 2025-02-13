@@ -3,9 +3,9 @@ import React, { useEffect, useState } from "react";
 import api from "../services/api";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { Button, Box, Alert } from "@mui/material";
+import { Button, Box, Alert, Typography } from "@mui/material";
 import { CSVLink } from "react-csv";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import { jsPDF } from "jspdf";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -62,6 +62,8 @@ const Reports = () => {
           "#27ae60",
           "#e74c3c",
           "#f39c12",
+          "#00BFFF",
+          "#FF1493",
         ],
         borderWidth: 1,
       },
@@ -112,9 +114,13 @@ const Reports = () => {
 
   return (
     <Box sx={{ padding: "1rem" }}>
-      <h2>Relatórios Estatísticos</h2>
+      <Typography variant="h4" align="center" gutterBottom>
+        Relatórios Estatísticos
+      </Typography>
       {loading ? (
-        <p>Carregando dados para relatório...</p>
+        <Typography align="center">
+          Carregando dados para relatório...
+        </Typography>
       ) : error ? (
         <Alert severity="error">{error}</Alert>
       ) : (
@@ -148,8 +154,8 @@ const Reports = () => {
         </>
       )}
       {/* Botão para voltar à Dashboard */}
-      <Box sx={{ mt: 4, textAlign: 'center' }}>
-        <Button variant="outlined" onClick={() => navigate('/dashboard')}>
+      <Box sx={{ mt: 4, textAlign: "center" }}>
+        <Button variant="outlined" onClick={() => navigate("/dashboard")}>
           Voltar para Dashboard
         </Button>
       </Box>

@@ -102,7 +102,7 @@ const DocumentsTable = ({
               <TableCell>
                 <strong>Assunto</strong>
               </TableCell>
-              <TableCell>Status</TableCell>
+              <TableCell><strong>Status</strong></TableCell>
               <TableCell>
                 <strong>Criado em</strong>
               </TableCell>

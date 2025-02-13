@@ -35,7 +35,7 @@ const GenerateDocumentForm = ({ onDocumentGenerated }) => {
   ];
 
   // Lista das siglas das comissões disponíveis
-  const comissoes = ["CLN", "CEDP", "CEDB", "CEDS", "CEASPE", "CEED","PRES", "SEREV", "COADM" ];
+  const comissoes = ["CLN", "CEDP", "CEDB", "CEDS", "CEASPE", "CEED","PRES", "SEREV", "COADM", "COADM/PROT" ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();

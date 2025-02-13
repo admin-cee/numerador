@@ -2,7 +2,7 @@
 const Document = require('../models/Document');
 const auditController = require('./auditController');
 
-// Função para gerar um novo número de documento para uma combinação de comissão e tipo
+// Função para gerar um novo número de documento com base no TIPO (numeração independente da comissão)
 exports.generateDocumentNumber = async (req, res) => {
   const { comissao, tipo, assunto } = req.body;
   
@@ -11,20 +11,19 @@ exports.generateDocumentNumber = async (req, res) => {
   }
 
   try {
-    // Busca o último documento para a combinação de comissão e tipo (normalizando o tipo para caixa alta)
-    const lastDoc = await Document.findOne({
+    // Filtra os documentos apenas pelo tipo (normalizando para caixa alta)
+    const docsDoTipo = await Document.findAll({
       where: {
-        comissao,
         tipo: tipo.toUpperCase()
       },
       order: [['numero', 'DESC']]
     });
 
-    const ultimoNumero = lastDoc ? lastDoc.numero : 0;
+    const ultimoNumero = docsDoTipo.length > 0 ? Math.max(...docsDoTipo.map(doc => doc.numero)) : 0;
     const novoNumero = ultimoNumero + 1;
 
-    // Formata o número com zeros à esquerda e concatena com a sigla da comissão e o tipo
-    const numeroFormatado = novoNumero.toString().padStart(3, '0') + comissao + '_' + tipo.toUpperCase();
+    // Formata o identificador no formato: TIPO_NNN_COMISSAO
+    const numeroFormatado = `${tipo.toUpperCase()}_${novoNumero.toString().padStart(3, '0')}_${comissao}`;
 
     // Cria o novo documento no banco de dados
     const novoDocumento = await Document.create({
@@ -36,7 +35,7 @@ exports.generateDocumentNumber = async (req, res) => {
       criadoEm: new Date()
     });
 
-    // Registra o evento de auditoria
+    // Registra o evento de auditoria, incluindo o usuário, se disponível
     auditController.logEvent(`Documento gerado: ${numeroFormatado} pelo usuário ${req.user ? req.user.email : 'desconhecido'}`);
 
     return res.status(201).json({ message: 'Documento gerado com sucesso.', documento: novoDocumento });
@@ -57,7 +56,7 @@ exports.getDocuments = async (req, res) => {
   }
 };
 
-// Atualizar documento (edição)
+// Função para atualizar documento (edição)
 exports.updateDocument = async (req, res) => {
   const { id } = req.params;
   const { assunto, status } = req.body; // Supondo que esses campos sejam editáveis
@@ -66,13 +65,11 @@ exports.updateDocument = async (req, res) => {
     if (!document) {
       return res.status(404).json({ message: 'Documento não encontrado.' });
     }
-    // Atualize os campos desejados
     document.assunto = assunto || document.assunto;
     document.status = status || document.status;
     await document.save();
 
-    // Registre no log de auditoria
-    auditController.logEvent(`Documento ${document.numeroFormatado} atualizado. Novo assunto: ${document.assunto}, novo status: ${document.status}`);
+    auditController.logEvent(`Documento ${document.numeroFormatado} atualizado. Novo assunto: ${document.assunto}, novo status: ${document.status} pelo usuário ${req.user ? req.user.email : 'desconhecido'}`);
 
     return res.status(200).json({ message: 'Documento atualizado com sucesso.', document });
   } catch (error) {
@@ -81,7 +78,7 @@ exports.updateDocument = async (req, res) => {
   }
 };
 
-// Excluir documento
+// Função para excluir documento
 exports.deleteDocument = async (req, res) => {
   const { id } = req.params;
   try {
@@ -91,7 +88,6 @@ exports.deleteDocument = async (req, res) => {
     }
     await document.destroy();
 
-    // Registre o evento de auditoria
     auditController.logEvent(`Documento ${document.numeroFormatado} excluído pelo usuário ${req.user ? req.user.email : 'desconhecido'}`);
 
     return res.status(200).json({ message: 'Documento excluído com sucesso.' });
